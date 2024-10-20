@@ -1,0 +1,50 @@
+﻿@using RickAndMortyApp.Models
+@using RickAndMortyApp.Components
+@page "/items"
+@inject HttpClient Http
+@using System.Net.Http.Json
+
+
+<PageTitle>Characters</PageTitle>
+
+<h3>Characters List</h3>
+
+@if (items == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in items)
+        {
+            <div class="col-md-4">
+                <ItemCard Item="item" />
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Item>? items;
+
+    protected override async Task OnInitializedAsync()
+{
+    var response = await Http.GetFromJsonAsync<ApiResponse>("character");
+    
+    if (response != null) // Verifica si la respuesta no es nula
+    {
+        items = response.Results; // Asigna el resultado a items
+    }
+    else
+    {
+        // Manejo de errores: puedes inicializar items a una lista vacía o manejar el error de otra manera
+        items = new List<Item>(); 
+        // O puedes mostrar un mensaje de error, log, etc.
+    }
+}
+    private class ApiResponse
+    {
+        public List<Item>? Results { get; set; }
+    }
+}

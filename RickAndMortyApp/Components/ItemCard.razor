@@ -1,0 +1,24 @@
+@using RickAndMortyApp.Models
+
+<div class="card" style="width: 18rem;">
+    <img src="@Item?.Image" class="card-img-top" alt="@Item?.Name" />
+    <div class="card-body">
+        <h5 class="card-title">@Item?.Name</h5>
+        <p class="card-text">Status: @Item?.Status</p>
+        <p class="card-text">Species: @Item?.Species</p>
+
+        @if (Item != null) // Verifica si Item no es nulo
+        {
+            <NavLink class="btn btn-primary" href="@($"/item/{Item.Id}")">View Details</NavLink>
+        }
+        else
+        {
+            <p>No item available.</p> // Mensaje alternativo si Item es nulo
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Item? Item { get; set; }
+}

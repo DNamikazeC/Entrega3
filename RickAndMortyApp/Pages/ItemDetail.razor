@@ -1,0 +1,45 @@
+﻿@using RickAndMortyApp.Models
+@page "/item/{Id:int}"
+@inject HttpClient Http
+
+<PageTitle>Item Detail</PageTitle>
+
+@if (item == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@item.Name</h2>
+    <img src="@item.Image" alt="@item.Name" />
+    <p>Status: @item.Status</p>
+    <p>Species: @item.Species</p>
+    <p>Gender: @item.Gender</p>
+    <p>Origin: @item.Origin?.Name</p> 
+    <p>Location: @item.Location?.Name</p> 
+    <p>Episodes: @item.EpisodeCount</p>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private Item? item;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            item = await Http.GetFromJsonAsync<Item>($"character/{Id}");
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Error fetching item: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+}
+
+
